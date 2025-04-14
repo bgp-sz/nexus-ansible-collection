@@ -255,6 +255,7 @@ def get_possible_package_names(version, arch=None, java_version=None):
     # Architecture variants (highest priority)
     if arch:
         variants.extend([
+            f"nexus-{version}-linux-{arch}.tar.gz",
             f"nexus-unix-{arch}-{version}.tar.gz",
             f"nexus-{arch}-unix-{version}.tar.gz",
         ])
@@ -319,6 +320,7 @@ def get_download_url(state, version=None, arch=None, base_url=None, validate_cer
         # Define URL patterns in order of precedence
         patterns = [
             rf"nexus-{arch}-.*?{version}\.tar\.gz$" if arch else None,
+            rf"nexus-{version}-linux-{arch}\.tar\.gz$" if arch else None,
             rf"nexus-{version}-unix\.tar\.gz$",
             rf"nexus-unix-{version}\.tar\.gz$",
             rf"nexus-{version}-.*?-unix\.tar\.gz$"
@@ -425,7 +427,7 @@ def main():
     module_args = dict(
         state=dict(type='str', required=True, choices=['latest', 'present']),
         version=dict(type='str', required=False),
-        arch=dict(type='str', required=False, default='x86-64'),
+        arch=dict(type='str', required=False, default='x86_64'),
         url=dict(type='str', required=False),
         timeout=dict(type='int', required=False, default=120),
         dest=dict(type='path', required=True),
